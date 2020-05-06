@@ -358,22 +358,13 @@ mers_weekly['Date'] = pd.to_datetime(mers_weekly['Week'].astype(str) +
 #############################################################################
 
 
-def display_sars_ebola_covid():
+def sars_ebola_first():
     temp = pd.concat([s_dbd, e_dbd, c_dbd], axis=0, sort=True)
 
     fig = px.line(temp, x="nth_day", y="Cases", color='epidemic', range_x=[0, 100], height=600, width=700,
                   title='Cases', color_discrete_sequence=px.colors.qualitative.Light24)
-    #
-    # fig = px.line(temp, x="nth_day", y="Deaths", color='epidemic', range_x=[0, 100], height=600, width=700,
-    #               title='Deaths', color_discrete_sequence=sec)
-    # fig.update_layout(xaxis_rangeslider_visible=True)
-    # fig.show()
-    #
-    # fig = px.line(temp, x="nth_day", y="n_countries", color='epidemic', range_x=[0, 100], height=600, width=700,
-    #               title='No. of Countries', color_discrete_sequence=sec)
-    # fig.update_layout(xaxis_rangeslider_visible=True)
-    # fig.show()
     fig.update_layout(
+        title='Cases',
         hovermode='x',
         font=dict(
             family="Courier New, monospace",
@@ -408,6 +399,86 @@ def display_sars_ebola_covid():
     fig.update_yaxes(zeroline=True, zerolinewidth=2, zerolinecolor='#3A3A3A')
     return fig
 
+def ebola_sars_second():
+    temp = pd.concat([s_dbd, e_dbd, c_dbd], axis=0, sort=True)
+    fig = px.line(temp, x="nth_day", y="Deaths", color='epidemic', range_x=[0, 100], height=600, width=700,
+                  title='Deaths', color_discrete_sequence=px.colors.qualitative.Light24)
+    fig.update_layout(
+        title='Deaths',
+        hovermode='x',
+        font=dict(
+            family="Courier New, monospace",
+            size=14,
+            color=colors['figure_text'],
+        ),
+        legend=dict(
+            x=0.02,
+            y=1,
+            traceorder="normal",
+            font=dict(
+                family="sans-serif",
+                size=12,
+                color=colors['figure_text']
+            ),
+            bgcolor=colors['background'],
+            borderwidth=5
+        ),
+        paper_bgcolor=colors['background'],
+        plot_bgcolor=colors['background'],
+        margin=dict(l=0,
+                    r=0,
+                    t=0,
+                    b=0
+                    ),
+        height=300,
+
+    )
+    fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='#3A3A3A')
+    fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='#3A3A3A')
+
+    fig.update_yaxes(zeroline=True, zerolinewidth=2, zerolinecolor='#3A3A3A')
+    return fig
+
+def ebola_sars_third():
+    temp = pd.concat([s_dbd, e_dbd, c_dbd], axis=0, sort=True)
+
+    fig = px.line(temp, x="nth_day", y="n_countries", color='epidemic', range_x=[0, 100], height=600, width=700,
+                  title='No. of Countries', color_discrete_sequence=px.colors.qualitative.Light24)
+    fig.update_layout(
+        title='Number of Countries affected',
+        hovermode='x',
+        font=dict(
+            family="Courier New, monospace",
+            size=14,
+            color=colors['figure_text'],
+        ),
+        legend=dict(
+            x=0.02,
+            y=1,
+            traceorder="normal",
+            font=dict(
+                family="sans-serif",
+                size=12,
+                color=colors['figure_text']
+            ),
+            bgcolor=colors['background'],
+            borderwidth=5
+        ),
+        paper_bgcolor=colors['background'],
+        plot_bgcolor=colors['background'],
+        margin=dict(l=0,
+                    r=0,
+                    t=0,
+                    b=0
+                    ),
+        height=300,
+
+    )
+    fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='#3A3A3A')
+    fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='#3A3A3A')
+
+    fig.update_yaxes(zeroline=True, zerolinewidth=2, zerolinecolor='#3A3A3A')
+    return fig
 
 #############################################################################
 # mapbox_access_token keys, not all mapbox function require token to function.
@@ -1291,35 +1362,51 @@ app.layout = html.Div(
             ],className="six columns")
         ],className="row"
         ),
-        #Comparison
-                html.Div(
-                    [
-                        dcc.RadioItems(id='graph-comparison',options=[{'label': i, 'value': i}
-                                 for i in ['Comparison']],
-                        value='Confirmed Cases',
-                        labelStyle={'display': 'inline-block'},
-                        style={
-                            'fontSize': 20,
-                         },
+#Comparison one
+        html.Div(
+            [
+                dcc.RadioItems(id='graph-comparison',options=[{'label': i, 'value': i}
+                         for i in ['Comparison']],
+                value='Confirmed Cases',
+                labelStyle={'display': 'inline-block'},
+                style={
+                    'fontSize': 20,
+                 },
 
-                    )
-                    ], className="six columns"
-                ),
-                html.Div(
-                    [
-                        dcc.Graph(id='comparison',
-                                  )
-                    ], className="six columns"
-                )
-
-
-            ], className="row",
+            )
+            ], className="six columns"
+        ),
+        html.Div(
+            [
+                dcc.Graph(id='comparison',
+                          )
+            ], className="six columns",
             style={
                 'textAlign': 'left',
                 'color': colors['text'],
-                'backgroundColor': colors['background'],
-            },
-
+                'backgroundColor': colors['background']},
+        ),
+        html.Div(
+            [
+                dcc.Graph(id='comparison-second',
+                          )
+            ], className="six columns",
+            style={
+                'textAlign': 'left',
+                'color': colors['text'],
+                'backgroundColor': colors['background']},
+        ),
+        html.Div(
+            [
+                dcc.Graph(id='comparison-third',
+                          )
+            ], className="six columns",
+            style={
+                'textAlign': 'left',
+                'color': colors['text'],
+                'backgroundColor': colors['background']},
+        ),
+    ],className='row'
     ),
     style={
         'textAlign': 'left',
@@ -1328,9 +1415,19 @@ app.layout = html.Div(
     },
 )
 
+
 @app.callback(Output('comparison', 'figure'),[Input('graph-comparison', 'value')])
 def comparison(graph_comp):
-    return display_sars_ebola_covid()
+    return sars_ebola_first()
+
+@app.callback(Output('comparison-second', 'figure'),[Input('graph-comparison', 'value')])
+def comparison(graph_comp):
+    return ebola_sars_second()
+
+@app.callback(Output('comparison-third', 'figure'),[Input('graph-comparison', 'value')])
+def comparison(graph_comp):
+    return ebola_sars_third()
+
 
 @app.callback(
     Output('global-graph', 'figure'),
@@ -1366,20 +1463,7 @@ def map_selection(data, selected_rows,graph_line):
         fig2 = draw_singleCountry_Bar(df_confirmed_t,df_deaths_t,df_recovered_t,selected_rows[0],graph_line)
         zoom=4
         return gen_map(aux,zoom,temp_df['Lat'].iloc[0],temp_df['Long'].iloc[0]), fig1,fig2
-#
-# # hide/show modal
-# @app.callback(Output('modal', 'style'),
-#               [Input('info-button', 'n_clicks')])
-# def show_modal(n):
-#     if n > 0:
-#         return {"display": "block"}
-#     return {"display": "none"}
-#
-# # Close modal by resetting info_button click to 0
-# @app.callback(Output('info-button', 'n_clicks'),
-#               [Input('modal-close-button', 'n_clicks')])
-# def close_modal(n):
-#     return 0
+
 
 if __name__ == '__main__':
     app.run_server(debug=True)
