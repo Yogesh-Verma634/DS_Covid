@@ -1500,7 +1500,7 @@ app.layout = html.Div(
         html.Div([
 
             # Comparison one
-            html.P([html.H4('Comparison between SARS, MERS, COVID: ',
+            html.P([html.H4('Comparison between SARS, Ebola, COVID: ',
                             )], className="row"),
             html.Div(
                 [
