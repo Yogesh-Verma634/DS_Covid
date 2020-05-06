@@ -23,7 +23,7 @@ external_scripts = [{
 }]
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets, external_scripts=external_scripts)
-app.title = 'Covid19 - Global Dashboard Example'
+app.title = 'COVID 19 Dashboard'
 
 # for heroku to run correctly
 server = app.server
@@ -75,13 +75,13 @@ df_recovered = pd.read_csv(url_recovered)
 
 
 ##############################################################################################################################
-# Moving Singapore to the first row in the datatable (You can choose any country of interest to be display on the first row)
+# Moving USA to the first row in the datatable (You can choose any country of interest to be display on the first row)
 ##############################################################################################################################
 
 def df_move1st_sg(df_t):
-    # Moving Singapore to the first row in the datatable
+    # Moving USA to the first row in the datatable
     df_t["new"] = range(1, len(df_t) + 1)
-    df_t.loc[df_t[df_t['Country/Region'] == 'Singapore'].index.values, 'new'] = 0
+    df_t.loc[df_t[df_t['Country/Region'] == 'USA'].index.values, 'new'] = 0
     df_t = df_t.sort_values("new").drop('new', axis=1)
     return df_t
 
@@ -219,9 +219,9 @@ map_data['Deaths_24hr'] = df_deaths.iloc[:, -1] - df_deaths.iloc[:, -2]
 map_data['Recovered_24hr'] = df_recovered_fill.iloc[:, -1] - df_recovered_fill.iloc[:, -2]
 map_data['Confirmed_24hr'] = df_confirmed.iloc[:, -1] - df_confirmed.iloc[:, -2]
 map_data.sort_values(by='Confirmed', ascending=False, inplace=True)
-# Moving Singapore to the first row in the datatable
+# Moving USA to the first row in the datatable
 map_data["new"] = range(1, len(map_data) + 1)
-map_data.loc[map_data[map_data['Country/Region'] == 'Singapore'].index.values, 'new'] = 0
+map_data.loc[map_data[map_data['Country/Region'] == 'USA'].index.values, 'new'] = 0
 map_data = map_data.sort_values("new").drop('new', axis=1)
 
 #############################################################################
@@ -645,7 +645,7 @@ app.layout = html.Div(
         # Header display
         html.Div(
             [
-                html.H1(children='Covid-19 (Coronavirus) Interactive Outbreak Tracker',
+                html.H1(children='COVID-19 Interactive Tracker',
                         style={
                             'textAlign': 'left',
                             'color': colors['text'],
@@ -711,7 +711,7 @@ app.layout = html.Div(
                 ),
 
                 html.Div([html.Span(
-                    'Dashboard: Covid-19 outbreak. (Updated once a day, based on consolidated last day total) Last Updated: ',
+                    'Last Updated: ',
                     style={'color': colors['text'],
                            }),
                           html.Span(datatime_convert(df_confirmed.columns[-1], 1) + '  00:01 (UTC).',
@@ -730,14 +730,6 @@ app.layout = html.Div(
                                            }),
 
                           ],
-                         className='twelve columns'
-                         ),
-                html.Div(children='Best viewed on Desktop. Refresh browser for latest update.',
-                         style={
-                             'textAlign': 'left',
-                             'color': colors['text'],
-                             'backgroundColor': colors['background'],
-                         },
                          className='twelve columns'
                          )
             ], className="row"
@@ -1129,26 +1121,8 @@ app.layout = html.Div(
                 )
             ], className="six columns"),
 
-            html.Div(
-                [
-                    html.Hr(),
-                    html.P('Source Code Hosted on  ',
-                           style={'display': 'inline'}),
-                    html.A('Github',
-                           href='https://github.com/Unicorndy/covid19_dashboard'),
-                    html.P(' 2020.',
-                           style={'display': 'inline'}),
-                    html.P(' Click here to access ',
-                           style={'display': 'inline'}),
-                    html.A('Covid 19 Version 2.0 Web App',
-                           href='https://covid19dashboardsg.herokuapp.com/'),
-                    html.Hr(),
-                ], className="twelve columns",
-                style={'fontSize': 18, 'padding-top': 20}
-            )
         ], className="row"
-        ),
-
+        )
     ],
         className='ten columns offset-by-one'
     ),

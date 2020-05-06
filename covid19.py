@@ -22,7 +22,7 @@ external_scripts = [{
     }]
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets, external_scripts = external_scripts)
-app.title = 'Covid19 - Global Dashboard Example'
+app.title = 'COVID 19 Dashboard'
 
 #for heroku to run correctly
 server = app.server
@@ -36,7 +36,7 @@ colors = {
     'deaths_text':'#f44336',
     'recovered_text':'#5A9E6F',
     'highest_case_bg':'#393939',
-    
+
 }
 
 #Creating custom style for local use
@@ -73,14 +73,14 @@ df_deaths = pd.read_csv(url_deaths)
 df_recovered = pd.read_csv(url_recovered)
 
 ##############################################################################################################################
-# Moving Singapore to the first row in the datatable (You can choose any country of interest to be display on the first row)
+# Moving USA to the first row in the datatable (You can choose any country of interest to be display on the first row)
 ##############################################################################################################################
 
 def df_move1st_sg(df_t):
 
-    #Moving Singapore to the first row in the datatable
+    #Moving USA to the first row in the datatable
     df_t["new"] = range(1,len(df_t)+1)
-    df_t.loc[df_t[df_t['Country/Region'] == 'Singapore'].index.values,'new'] = 0
+    df_t.loc[df_t[df_t['Country/Region'] == 'USA'].index.values,'new'] = 0
     df_t = df_t.sort_values("new").drop('new', axis=1)
     return df_t
 
@@ -132,7 +132,7 @@ df_confirmed.drop('Province+Country',axis=1,inplace=True)
 df_recovered.drop('Province+Country',axis=1,inplace=True)
 df_recovered_fill.drop('Province+Country',axis=1,inplace=True)
 
-# Data preprocessing for times series countries graph display 
+# Data preprocessing for times series countries graph display
 # create temp to store sorting arrangement for all confirm, deaths and recovered.
 df_confirmed_sort_temp = df_confirmed.sort_values(by=df_confirmed.columns[-1], ascending=False)
 
@@ -198,14 +198,14 @@ map_data['Deaths_24hr']=df_deaths.iloc[:,-1] - df_deaths.iloc[:,-2]
 map_data['Recovered_24hr']=df_recovered_fill.iloc[:,-1] - df_recovered_fill.iloc[:,-2]
 map_data['Confirmed_24hr']=df_confirmed.iloc[:,-1] - df_confirmed.iloc[:,-2]
 map_data.sort_values(by='Confirmed', ascending=False,inplace=True)
-#Moving Singapore to the first row in the datatable
+#Moving USA to the first row in the datatable
 map_data["new"] = range(1,len(map_data)+1)
-map_data.loc[map_data[map_data['Country/Region'] == 'Singapore'].index.values,'new'] = 0
+map_data.loc[map_data[map_data['Country/Region'] == 'USA'].index.values,'new'] = 0
 map_data = map_data.sort_values("new").drop('new', axis=1)
 
 
 #############################################################################
-# mapbox_access_token keys, not all mapbox function require token to function. 
+# mapbox_access_token keys, not all mapbox function require token to function.
 #############################################################################
 mapbox_access_token = 'pk.eyJ1IjoieXZlcm1hNjM0IiwiYSI6ImNrOXQ1cml3NzE5NTMzZ21vMjVrbmowdDEifQ.SQPJw-KLLDj97DBsNHyvlg'
 
@@ -219,7 +219,7 @@ def gen_map(map_data,zoom,lat,lon):
             "type": "scattermapbox",  #specify the type of data to generate, in this case, scatter map box is used
             "lat": list(map_data['Lat']),   #for markers location
             "lon": list(map_data['Long']),
-            # "hoverinfo": "text",         
+            # "hoverinfo": "text",
             "hovertext": [["Country/Region: {} <br>Province/State: {} <br>Confirmed: {} (+ {} past 24hrs)<br>Deaths: {} (+ {} past 24hrs)<br>Recovered: {} (+ {} past 24hrs)".format(i, j, k, k24, l, l24, m, m24)]
                           for i, j, k, l, m, k24, l24, m24 in zip(map_data['Country/Region'], map_data['Province/State'],
                                                    map_data['Confirmed'], map_data['Deaths'], map_data['Recovered'],
@@ -232,7 +232,7 @@ def gen_map(map_data,zoom,lat,lon):
                     "size": np.log(map_data['Confirmed'])*4,
             }
         },
-        
+
         ],
         "layout": dict(
             autosize=True,
@@ -282,7 +282,7 @@ def high_cases(countryname,total,single,color_word='#63b6ff',confirmed_total=1,d
                         'textAlign': 'center',
                         'color': 'rgb(200,200,200)',
                         'fontsize':12,
-                        }       
+                        }
                 )
 
     return html.P([ html.Span(countryname + ' | ' + f"{int(total):,d}",
@@ -294,11 +294,11 @@ def high_cases(countryname,total,single,color_word='#63b6ff',confirmed_total=1,d
                 'textAlign': 'center',
                 'color': 'rgb(200,200,200)',
                 'fontsize':12,
-                }       
+                }
         )
 
 #########################################################################
-#Convert datetime to Display datetime with following format - 06-Apr-2020
+#Convert datetime to Display datetime with following format
 #########################################################################
 
 def datatime_convert(date_str,days_to_add=0):
@@ -344,7 +344,7 @@ for i in range(noToDisplay):
 
 ####################################################
 # Prepare plotly figure to attached to dcc component
-# Global outbreak Plot 
+# Global outbreak Plot
 ####################################################
 # Change date index to datetimeindex and share x-axis with all the plot
 def draw_global_graph(df_confirmed_total,df_deaths_total,df_recovered_total,graph_type='Total Cases'):
@@ -394,9 +394,9 @@ def draw_global_graph(df_confirmed_total,df_deaths_total,df_recovered_total,grap
         ),
         paper_bgcolor=colors['background'],
         plot_bgcolor=colors['background'],
-        margin=dict(l=0, 
-                    r=0, 
-                    t=0, 
+        margin=dict(l=0,
+                    r=0,
+                    t=0,
                     b=0
                     ),
         height=300,
@@ -440,9 +440,9 @@ def draw_highest_10(df_confirmed_t_stack, df_deaths_t_stack, graphHigh10_type='C
         ),
         paper_bgcolor=colors['background'],
         plot_bgcolor=colors['background'],
-        margin=dict(l=0, 
-                    r=0, 
-                    t=0, 
+        margin=dict(l=0,
+                    r=0,
+                    t=0,
                     b=0
                     ),
         height=300,
@@ -461,12 +461,12 @@ def draw_highest_10(df_confirmed_t_stack, df_deaths_t_stack, graphHigh10_type='C
 ####################################################
 
 def draw_singleCountry_Scatter(df_confirmed_t,df_deaths_t,df_recovered_t,selected_row=0, daily_change=False):
-    
+
     if daily_change:
         df_confirmed_t = (df_confirmed_t - df_confirmed_t.shift(1)).drop(df_confirmed_t.index[0])
         df_deaths_t = (df_deaths_t - df_deaths_t.shift(1)).drop(df_deaths_t.index[0])
         df_recovered_t = (df_recovered_t - df_recovered_t.shift(1)).drop(df_recovered_t.index[0])
-        
+
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=df_confirmed_t.index, y=df_confirmed_t.iloc[:,selected_row],
                              mode='lines+markers',
@@ -528,12 +528,12 @@ def draw_singleCountry_Scatter(df_confirmed_t,df_deaths_t,df_recovered_t,selecte
 ####################################################
 
 def draw_singleCountry_Bar(df_confirmed_t,df_deaths_t,df_recovered_t,selected_row=0,graph_line='Line Chart'):
-    
+
 
     df_confirmed_t = (df_confirmed_t - df_confirmed_t.shift(1)).drop(df_confirmed_t.index[0])
     df_deaths_t = (df_deaths_t - df_deaths_t.shift(1)).drop(df_deaths_t.index[0])
     df_recovered_t = (df_recovered_t - df_recovered_t.shift(1)).drop(df_recovered_t.index[0])
-        
+
     fig = go.Figure()
     if graph_line=='Line Chart':
         fig.add_trace(go.Bar(x=df_confirmed_t.index, y=df_confirmed_t.iloc[:,selected_row],
@@ -548,7 +548,7 @@ def draw_singleCountry_Bar(df_confirmed_t,df_deaths_t,df_recovered_t,selected_ro
                             name='Deceased',
                             marker_color='#FF3333'
                             ))
-  
+
     else:
         fig.add_trace(go.Scatter(x=df_confirmed_t.index, y=df_confirmed_t.iloc[:,selected_row],
                                 mode='lines+markers',
@@ -573,7 +573,7 @@ def draw_singleCountry_Bar(df_confirmed_t,df_deaths_t,df_recovered_t,selected_ro
         title = new[1] + " - " + new[0]
 
     fig.update_layout(
-        title=title + ' (Daily Cases)',
+        title=title + ' - Daily Cases',
         barmode='stack',
         hovermode='x',
         font=dict(
@@ -637,29 +637,29 @@ app.layout = html.Div(
                 html.Div([  # modal div
                     html.Div([  # content div
 
-                        dcc.Markdown('''
-                            ##### Dataset provided by Johns Hopkins University Center for Systems Science and Engineering (JHU CSSE):
-                            https://systems.jhu.edu/
-                           
-                            Data Sources:
-                            * World Health Organization (WHO): https://www.who.int/
-                            * DXY.cn. Pneumonia. 2020. http://3g.dxy.cn/newh5/view/pneumonia.
-                            * BNO News: https://bnonews.com/index.php/2020/02/the-latest-coronavirus-cases/
-                            * National Health Commission of the People’s Republic of China (NHC):
-                            http://www.nhc.gov.cn/xcs/yqtb/list_gzbd.shtml
-                            * China CDC (CCDC): http://weekly.chinacdc.cn/news/TrackingtheEpidemic.htm
-                            * Hong Kong Department of Health: https://www.chp.gov.hk/en/features/102465.html
-                            * Macau Government: https://www.ssm.gov.mo/portal/
-                            * Taiwan CDC: https://sites.google.com/cdc.gov.tw/2019ncov/taiwan?authuser=0
-                            * US CDC: https://www.cdc.gov/coronavirus/2019-ncov/index.html
-                            * Government of Canada: https://www.canada.ca/en/public-health/services/diseases/coronavirus.html
-                            * Australia Government Department of Health: https://www.health.gov.au/news/coronavirus-update-at-a-glance
-                            * European Centre for Disease Prevention and Control (ECDC): https://www.ecdc.europa.eu/en/geographical-distribution-2019-ncov-cases 
-                            * Ministry of Health Singapore (MOH): https://www.moh.gov.sg/covid-19
-                            * Italy Ministry of Health: http://www.salute.gov.it/nuovocoronavirus
-                            * 1Point3Arces: https://coronavirus.1point3acres.com/en
-                            * WorldoMeters: https://www.worldometers.info/coronavirus/
-                            '''),
+                        # dcc.Markdown('''
+                        #     ##### Dataset provided by Johns Hopkins University Center for Systems Science and Engineering (JHU CSSE):
+                        #     https://systems.jhu.edu/
+                        #
+                        #     Data Sources:
+                        #     * World Health Organization (WHO): https://www.who.int/
+                        #     * DXY.cn. Pneumonia. 2020. http://3g.dxy.cn/newh5/view/pneumonia.
+                        #     * BNO News: https://bnonews.com/index.php/2020/02/the-latest-coronavirus-cases/
+                        #     * National Health Commission of the People’s Republic of China (NHC):
+                        #     http://www.nhc.gov.cn/xcs/yqtb/list_gzbd.shtml
+                        #     * China CDC (CCDC): http://weekly.chinacdc.cn/news/TrackingtheEpidemic.htm
+                        #     * Hong Kong Department of Health: https://www.chp.gov.hk/en/features/102465.html
+                        #     * Macau Government: https://www.ssm.gov.mo/portal/
+                        #     * Taiwan CDC: https://sites.google.com/cdc.gov.tw/2019ncov/taiwan?authuser=0
+                        #     * US CDC: https://www.cdc.gov/coronavirus/2019-ncov/index.html
+                        #     * Government of Canada: https://www.canada.ca/en/public-health/services/diseases/coronavirus.html
+                        #     * Australia Government Department of Health: https://www.health.gov.au/news/coronavirus-update-at-a-glance
+                        #     * European Centre for Disease Prevention and Control (ECDC): https://www.ecdc.europa.eu/en/geographical-distribution-2019-ncov-cases
+                        #     * Ministry of Health Singapore (MOH): https://www.moh.gov.sg/covid-19
+                        #     * Italy Ministry of Health: http://www.salute.gov.it/nuovocoronavirus
+                        #     * 1Point3Arces: https://coronavirus.1point3acres.com/en
+                        #     * WorldoMeters: https://www.worldometers.info/coronavirus/
+                        #     '''),
                         html.Hr(),
                         html.Button('Close', id='modal-close-button',
                         style={
@@ -678,7 +678,7 @@ app.layout = html.Div(
                     style={"display": "none"},
                 ),
 
-                html.Div([html.Span('Dashboard: Covid-19 outbreak. (Updated once a day, based on consolidated last day total) Last Updated: ',
+                html.Div([html.Span('Last Updated: ',
                              style={'color': colors['text'],
                              }),
                         html.Span(datatime_convert(df_confirmed.columns[-1],1) + '  00:01 (UTC).',
@@ -699,14 +699,6 @@ app.layout = html.Div(
                          ],
                          className='twelve columns'
                          ),
-                html.Div(children='Best viewed on Desktop. Refresh browser for latest update.',
-                         style={
-                             'textAlign': 'left',
-                             'color': colors['text'],
-                             'backgroundColor': colors['background'],
-                         },
-                         className='twelve columns'
-                         )
             ], className="row"
         ),
 
@@ -807,7 +799,7 @@ app.layout = html.Div(
                         style={
                             'fontSize': 20,
                          },
-                        
+
                     )
                 ],className='six columns'
                 ),
@@ -821,7 +813,7 @@ app.layout = html.Div(
                         style={
                             'fontSize': 20,
                          },
-                        
+
                     )
                 ],className='five columns'
                 ),
@@ -867,7 +859,7 @@ app.layout = html.Div(
                         'backgroundColor':'#3B5998',
                         'borderRadius': '12px',
                         'fontSize': 17,
-                        }       
+                        }
                 ),
                 html.P(confirm_cases),
             ],
@@ -889,7 +881,7 @@ app.layout = html.Div(
                         'backgroundColor':'#3B5998',
                         'borderRadius': '12px',
                         'fontSize': 17,
-                        }       
+                        }
                 ),
 
                 html.P(confirm_cases_24hrs),
@@ -912,7 +904,7 @@ app.layout = html.Div(
                         'backgroundColor':'#ab2c1a',
                         'borderRadius': '12px',
                         'fontSize': 17,
-                        }       
+                        }
                 ),
 
                 html.P(deaths_cases),
@@ -935,7 +927,7 @@ app.layout = html.Div(
                         'backgroundColor':'#ab2c1a',
                         'borderRadius': '12px',
                         'fontSize': 17,
-                        }       
+                        }
                 ),
 
                 html.P(deaths_cases_24hrs),
@@ -1091,25 +1083,7 @@ app.layout = html.Div(
                     },
 
                 )
-            ],className="six columns"),
-
-            html.Div(
-                    [
-                        html.Hr(),
-                        html.P('Source Code Hosted on  ',
-                               style={'display': 'inline'}),
-                        html.A('Github',
-                               href='https://github.com/Unicorndy/covid19_dashboard'),
-                        html.P(' 2020.',
-                            style={'display': 'inline'}),
-                        html.P(' Click here to access ',
-                            style={'display': 'inline'}),
-                        html.A('Covid 19 Version 2.0 Web App',
-                               href='https://covid19dashboardsg.herokuapp.com/'),
-                        html.Hr(),
-                    ], className="twelve columns",
-                    style={'fontSize': 18, 'padding-top': 20}
-                )
+            ],className="six columns")
         ],className="row"
         ),
 
