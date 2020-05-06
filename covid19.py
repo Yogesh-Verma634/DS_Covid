@@ -203,6 +203,15 @@ map_data["new"] = range(1,len(map_data)+1)
 map_data.loc[map_data[map_data['Country/Region'] == 'USA'].index.values,'new'] = 0
 map_data = map_data.sort_values("new").drop('new', axis=1)
 
+#####################################################################################################################
+# comparison sars, mers, covid etc
+#####################################################################################################################
+
+
+
+
+
+
 
 #############################################################################
 # mapbox_access_token keys, not all mapbox function require token to function.
@@ -613,7 +622,7 @@ app.layout = html.Div(
         # Header display
         html.Div(
             [
-                html.H1(children='Covid-19 (Coronavirus) Interactive Outbreak Tracker',
+                html.H1(children='COVID19 Outbreak Tracker',
                         style={
                             'textAlign': 'left',
                             'color': colors['text'],
@@ -637,29 +646,29 @@ app.layout = html.Div(
                 html.Div([  # modal div
                     html.Div([  # content div
 
-                        # dcc.Markdown('''
-                        #     ##### Dataset provided by Johns Hopkins University Center for Systems Science and Engineering (JHU CSSE):
-                        #     https://systems.jhu.edu/
-                        #
-                        #     Data Sources:
-                        #     * World Health Organization (WHO): https://www.who.int/
-                        #     * DXY.cn. Pneumonia. 2020. http://3g.dxy.cn/newh5/view/pneumonia.
-                        #     * BNO News: https://bnonews.com/index.php/2020/02/the-latest-coronavirus-cases/
-                        #     * National Health Commission of the People’s Republic of China (NHC):
-                        #     http://www.nhc.gov.cn/xcs/yqtb/list_gzbd.shtml
-                        #     * China CDC (CCDC): http://weekly.chinacdc.cn/news/TrackingtheEpidemic.htm
-                        #     * Hong Kong Department of Health: https://www.chp.gov.hk/en/features/102465.html
-                        #     * Macau Government: https://www.ssm.gov.mo/portal/
-                        #     * Taiwan CDC: https://sites.google.com/cdc.gov.tw/2019ncov/taiwan?authuser=0
-                        #     * US CDC: https://www.cdc.gov/coronavirus/2019-ncov/index.html
-                        #     * Government of Canada: https://www.canada.ca/en/public-health/services/diseases/coronavirus.html
-                        #     * Australia Government Department of Health: https://www.health.gov.au/news/coronavirus-update-at-a-glance
-                        #     * European Centre for Disease Prevention and Control (ECDC): https://www.ecdc.europa.eu/en/geographical-distribution-2019-ncov-cases
-                        #     * Ministry of Health Singapore (MOH): https://www.moh.gov.sg/covid-19
-                        #     * Italy Ministry of Health: http://www.salute.gov.it/nuovocoronavirus
-                        #     * 1Point3Arces: https://coronavirus.1point3acres.com/en
-                        #     * WorldoMeters: https://www.worldometers.info/coronavirus/
-                        #     '''),
+                        dcc.Markdown('''
+                            ##### Dataset provided by Johns Hopkins University Center for Systems Science and Engineering (JHU CSSE):
+                            https://systems.jhu.edu/
+
+                            Data Sources:
+                            * World Health Organization (WHO): https://www.who.int/
+                            * DXY.cn. Pneumonia. 2020. http://3g.dxy.cn/newh5/view/pneumonia.
+                            * BNO News: https://bnonews.com/index.php/2020/02/the-latest-coronavirus-cases/
+                            * National Health Commission of the People’s Republic of China (NHC):
+                            http://www.nhc.gov.cn/xcs/yqtb/list_gzbd.shtml
+                            * China CDC (CCDC): http://weekly.chinacdc.cn/news/TrackingtheEpidemic.htm
+                            * Hong Kong Department of Health: https://www.chp.gov.hk/en/features/102465.html
+                            * Macau Government: https://www.ssm.gov.mo/portal/
+                            * Taiwan CDC: https://sites.google.com/cdc.gov.tw/2019ncov/taiwan?authuser=0
+                            * US CDC: https://www.cdc.gov/coronavirus/2019-ncov/index.html
+                            * Government of Canada: https://www.canada.ca/en/public-health/services/diseases/coronavirus.html
+                            * Australia Government Department of Health: https://www.health.gov.au/news/coronavirus-update-at-a-glance
+                            * European Centre for Disease Prevention and Control (ECDC): https://www.ecdc.europa.eu/en/geographical-distribution-2019-ncov-cases
+                            * Ministry of Health Singapore (MOH): https://www.moh.gov.sg/covid-19
+                            * Italy Ministry of Health: http://www.salute.gov.it/nuovocoronavirus
+                            * 1Point3Arces: https://coronavirus.1point3acres.com/en
+                            * WorldoMeters: https://www.worldometers.info/coronavirus/
+                            '''),
                         html.Hr(),
                         html.Button('Close', id='modal-close-button',
                         style={
