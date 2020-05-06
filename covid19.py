@@ -207,8 +207,150 @@ map_data = map_data.sort_values("new").drop('new', axis=1)
 # comparison sars, mers, covid etc
 #####################################################################################################################
 
+# COVID-19
+# --------
+
+# covid_19 dataset
+covid_19 = pd.read_csv('https://gitcdn.link/repo/chinmay-bhat/DS_Covid/master/DS_Project/corona-virus-report/covid_19_clean_complete.csv?token=ADCZI3ERSA5GL4JKDOAACWS6WL2LG')
+
+# selecting important columns only
+covid_19 = covid_19[['Date', 'Country/Region', 'Confirmed', 'Deaths', 'Recovered']]
+
+# replacing Mainland china with just China
+covid_19['Country/Region'] = covid_19['Country/Region'].replace('Mainland China', 'China')
+
+# renaming columns
+covid_19.columns = ['Date', 'Country', 'Cases', 'Deaths', 'Recovered']
+
+# group by date and country
+covid_19 = covid_19.groupby(['Date', 'Country'])['Cases', 'Deaths', 'Recovered']
+covid_19 = covid_19.sum().reset_index()
+
+# latest
+c_lat = covid_19[covid_19['Date'] == max(covid_19['Date'])].reset_index()
+
+# latest grouped by country
+c_lat_grp = c_lat.groupby('Country')['Cases', 'Deaths', 'Recovered'].sum().reset_index()
+
+# nth day
+covid_19['nth_day'] = (covid_19['Date'] - min(covid_19['Date'])).dt.days
+
+# day by day
+c_dbd = covid_19.groupby('Date')['Cases', 'Deaths', 'Recovered'].sum().reset_index()
+
+# nth day
+c_dbd['nth_day'] = covid_19.groupby('Date')['nth_day'].max().values
+
+# no. of countries
+temp = covid_19[covid_19['Cases']>0]
+c_dbd['n_countries'] = temp.groupby('Date')['Country'].apply(len).values
+
+c_dbd['new_cases'] = c_dbd['Cases'].diff()
+c_dbd['new_deaths'] = c_dbd['Deaths'].diff()
+c_dbd['epidemic'] = 'COVID-19'
+
+# EBOLA
+# ------
+
+# ebola dataset
+ebola_14 = pd.read_csv("https://raw.githubusercontent.com/chinmay-bhat/DS_Covid/master/DS_Project/ebola-outbreak-20142016-complete-dataset/ebola_2014_2016_clean.csv?token=ADCZI3FHLVRRTRVS2XR3W7S6WLZEQ",
+                       parse_dates=['Date'])
+
+# ebola_14 = ebola_14[ebola_14['Date']!=max(ebola_14['Date'])]
+
+# selecting important columns only
+ebola_14 = ebola_14[['Date', 'Country', 'No. of confirmed, probable and suspected cases',
+                     'No. of confirmed, probable and suspected deaths']]
+
+# renaming columns
+ebola_14.columns = ['Date', 'Country', 'Cases', 'Deaths']
+ebola_14.head()
+
+# group by date and country
+ebola_14 = ebola_14.groupby(['Date', 'Country'])['Cases', 'Deaths']
+ebola_14 = ebola_14.sum().reset_index()
+
+# filling missing values
+ebola_14['Cases'] = ebola_14['Cases'].fillna(0)
+ebola_14['Deaths'] = ebola_14['Deaths'].fillna(0)
+
+# converting datatypes
+ebola_14['Cases'] = ebola_14['Cases'].astype('int')
+ebola_14['Deaths'] = ebola_14['Deaths'].astype('int')
+
+# latest
+e_lat = ebola_14[ebola_14['Date'] == max(ebola_14['Date'])].reset_index()
+
+# latest grouped by country
+e_lat_grp = e_lat.groupby('Country')['Cases', 'Deaths'].sum().reset_index()
+
+# nth day
+ebola_14['nth_day'] = (ebola_14['Date'] - min(ebola_14['Date'])).dt.days
+
+# day by day
+e_dbd = ebola_14.groupby('Date')['Cases', 'Deaths'].sum().reset_index()
+
+# nth day
+e_dbd['nth_day'] = ebola_14.groupby('Date')['nth_day'].max().values
+
+# no. of countries
+temp = ebola_14[ebola_14['Cases']>0]
+e_dbd['n_countries'] = temp.groupby('Date')['Country'].apply(len).values
+
+e_dbd['new_cases'] = e_dbd['Cases'].diff()
+e_dbd['new_deaths'] = e_dbd['Deaths'].diff()
+e_dbd['epidemic'] = 'EBOLA'
+
+# SARS
+# ----
+
+# sars dataset
+sars_03 = pd.read_csv("https://raw.githubusercontent.com/chinmay-bhat/DS_Covid/master/DS_Project/sars_2003_complete_dataset_clean.csv?token=ADCZI3ABXCHYMEYEZCNOBZS6WLZHA",
+                       parse_dates=['Date'])
+
+# selecting important columns only
+sars_03 = sars_03[['Date', 'Country', 'Cumulative number of case(s)',
+                   'Number of deaths', 'Number recovered']]
+
+# renaming columns
+sars_03.columns = ['Date', 'Country', 'Cases', 'Deaths', 'Recovered']
+
+# group by date and country
+sars_03 = sars_03.groupby(['Date', 'Country'])['Cases', 'Deaths', 'Recovered']
+sars_03 = sars_03.sum().reset_index()
+
+# latest
+s_lat = sars_03[sars_03['Date'] == max(sars_03['Date'])].reset_index()
+
+# latest grouped by country
+s_lat_grp = s_lat.groupby('Country')['Cases', 'Deaths', 'Recovered'].sum().reset_index()
+
+# nth day
+sars_03['nth_day'] = (sars_03['Date'] - min(sars_03['Date'])).dt.days
+
+# day by day
+s_dbd = sars_03.groupby('Date')['Cases', 'Deaths', 'Recovered'].sum().reset_index()
+
+# nth day
+s_dbd['nth_day'] = sars_03.groupby('Date')['nth_day'].max().values
+
+# no. of countries
+temp = sars_03[sars_03['Cases']>0]
+s_dbd['n_countries'] = temp.groupby('Date')['Country'].apply(len).values
 
 
+s_dbd['new_cases'] = s_dbd['Cases'].diff()
+s_dbd['new_deaths'] = s_dbd['Deaths'].diff()
+s_dbd['epidemic'] = 'SARS'
+
+# MERS
+mers_cntry = pd.read_csv("https://raw.githubusercontent.com/chinmay-bhat/DS_Covid/master/DS_Project/mers-outbreak-dataset-20122019/country_count_latest.csv?token=ADCZI3H5QJUW5M5XOXRKQG26WLZJK")
+mers_weekly = pd.read_csv("https://raw.githubusercontent.com/chinmay-bhat/DS_Covid/master/DS_Project/mers-outbreak-dataset-20122019/weekly_clean.csv?token=ADCZI3C2YTQQJFUKIHSYMFK6WLZJ4")
+
+# cleaning
+mers_weekly['Year-Week'] = mers_weekly['Year'].astype(str) + ' - ' + mers_weekly['Week'].astype(str)
+mers_weekly['Date'] = pd.to_datetime(mers_weekly['Week'].astype(str) +
+                                     mers_weekly['Year'].astype(str).add('-1'),format='%V%G-%u')
 
 
 
