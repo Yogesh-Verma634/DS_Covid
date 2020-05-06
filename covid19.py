@@ -487,7 +487,7 @@ def ebola_sars_third():
 
 import pandas as pd
 import numpy as np
-from IPython.display import display, HTML
+# from IPython.display import display, HTML
 import matplotlib.pyplot as plt
 plt.rcParams['figure.figsize'] = [14, 6]
 import matplotlib.ticker as ticker
