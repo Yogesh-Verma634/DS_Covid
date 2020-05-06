@@ -1,6 +1,9 @@
 import pandas as pd
 import numpy as np
 
+# visualization
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -211,7 +214,7 @@ map_data = map_data.sort_values("new").drop('new', axis=1)
 # --------
 
 # covid_19 dataset
-covid_19 = pd.read_csv('https://gitcdn.link/repo/chinmay-bhat/DS_Covid/master/DS_Project/corona-virus-report/covid_19_clean_complete.csv?token=ADCZI3ERSA5GL4JKDOAACWS6WL2LG')
+covid_19 = pd.read_csv('https://raw.githubusercontent.com/chinmay-bhat/DS_Covid/master/DS_Project/corona-virus-report/covid_19_clean_complete.csv', parse_dates=['Date'])
 
 # selecting important columns only
 covid_19 = covid_19[['Date', 'Country/Region', 'Confirmed', 'Deaths', 'Recovered']]
@@ -253,8 +256,7 @@ c_dbd['epidemic'] = 'COVID-19'
 # ------
 
 # ebola dataset
-ebola_14 = pd.read_csv("https://raw.githubusercontent.com/chinmay-bhat/DS_Covid/master/DS_Project/ebola-outbreak-20142016-complete-dataset/ebola_2014_2016_clean.csv?token=ADCZI3FHLVRRTRVS2XR3W7S6WLZEQ",
-                       parse_dates=['Date'])
+ebola_14 = pd.read_csv("https://raw.githubusercontent.com/chinmay-bhat/DS_Covid/master/DS_Project/ebola-outbreak-20142016-complete-dataset/ebola_2014_2016_clean.csv", parse_dates=['Date'])
 
 # ebola_14 = ebola_14[ebola_14['Date']!=max(ebola_14['Date'])]
 
@@ -305,8 +307,7 @@ e_dbd['epidemic'] = 'EBOLA'
 # ----
 
 # sars dataset
-sars_03 = pd.read_csv("https://raw.githubusercontent.com/chinmay-bhat/DS_Covid/master/DS_Project/sars_2003_complete_dataset_clean.csv?token=ADCZI3ABXCHYMEYEZCNOBZS6WLZHA",
-                       parse_dates=['Date'])
+sars_03 = pd.read_csv("https://raw.githubusercontent.com/chinmay-bhat/DS_Covid/master/DS_Project/sars_2003_complete_dataset_clean.csv", parse_dates=['Date'])
 
 # selecting important columns only
 sars_03 = sars_03[['Date', 'Country', 'Cumulative number of case(s)',
@@ -344,15 +345,68 @@ s_dbd['new_deaths'] = s_dbd['Deaths'].diff()
 s_dbd['epidemic'] = 'SARS'
 
 # MERS
-mers_cntry = pd.read_csv("https://raw.githubusercontent.com/chinmay-bhat/DS_Covid/master/DS_Project/mers-outbreak-dataset-20122019/country_count_latest.csv?token=ADCZI3H5QJUW5M5XOXRKQG26WLZJK")
-mers_weekly = pd.read_csv("https://raw.githubusercontent.com/chinmay-bhat/DS_Covid/master/DS_Project/mers-outbreak-dataset-20122019/weekly_clean.csv?token=ADCZI3C2YTQQJFUKIHSYMFK6WLZJ4")
+mers_cntry = pd.read_csv("https://raw.githubusercontent.com/chinmay-bhat/DS_Covid/master/DS_Project/mers-outbreak-dataset-20122019/country_count_latest.csv")
+mers_weekly = pd.read_csv("https://raw.githubusercontent.com/chinmay-bhat/DS_Covid/master/DS_Project/mers-outbreak-dataset-20122019/weekly_clean.csv")
 
 # cleaning
 mers_weekly['Year-Week'] = mers_weekly['Year'].astype(str) + ' - ' + mers_weekly['Week'].astype(str)
 mers_weekly['Date'] = pd.to_datetime(mers_weekly['Week'].astype(str) +
                                      mers_weekly['Year'].astype(str).add('-1'),format='%V%G-%u')
 
+#############################################################################
+# display ebola, sars, covid
+#############################################################################
 
+
+def display_sars_ebola_covid():
+    temp = pd.concat([s_dbd, e_dbd, c_dbd], axis=0, sort=True)
+
+    fig = px.line(temp, x="nth_day", y="Cases", color='epidemic', range_x=[0, 100], height=600, width=700,
+                  title='Cases', color_discrete_sequence=px.colors.qualitative.Light24)
+    #
+    # fig = px.line(temp, x="nth_day", y="Deaths", color='epidemic', range_x=[0, 100], height=600, width=700,
+    #               title='Deaths', color_discrete_sequence=sec)
+    # fig.update_layout(xaxis_rangeslider_visible=True)
+    # fig.show()
+    #
+    # fig = px.line(temp, x="nth_day", y="n_countries", color='epidemic', range_x=[0, 100], height=600, width=700,
+    #               title='No. of Countries', color_discrete_sequence=sec)
+    # fig.update_layout(xaxis_rangeslider_visible=True)
+    # fig.show()
+    fig.update_layout(
+        hovermode='x',
+        font=dict(
+            family="Courier New, monospace",
+            size=14,
+            color=colors['figure_text'],
+        ),
+        legend=dict(
+            x=0.02,
+            y=1,
+            traceorder="normal",
+            font=dict(
+                family="sans-serif",
+                size=12,
+                color=colors['figure_text']
+            ),
+            bgcolor=colors['background'],
+            borderwidth=5
+        ),
+        paper_bgcolor=colors['background'],
+        plot_bgcolor=colors['background'],
+        margin=dict(l=0,
+                    r=0,
+                    t=0,
+                    b=0
+                    ),
+        height=300,
+
+    )
+    fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='#3A3A3A')
+    fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='#3A3A3A')
+
+    fig.update_yaxes(zeroline=True, zerolinewidth=2, zerolinecolor='#3A3A3A')
+    return fig
 
 
 #############################################################################
@@ -1237,10 +1291,35 @@ app.layout = html.Div(
             ],className="six columns")
         ],className="row"
         ),
+        #Comparison
+                html.Div(
+                    [
+                        dcc.RadioItems(id='graph-comparison',options=[{'label': i, 'value': i}
+                                 for i in ['Comparison']],
+                        value='Confirmed Cases',
+                        labelStyle={'display': 'inline-block'},
+                        style={
+                            'fontSize': 20,
+                         },
+
+                    )
+                    ], className="six columns"
+                ),
+                html.Div(
+                    [
+                        dcc.Graph(id='comparison',
+                                  )
+                    ], className="six columns"
+                )
 
 
-    ],
-        className='ten columns offset-by-one'
+            ], className="row",
+            style={
+                'textAlign': 'left',
+                'color': colors['text'],
+                'backgroundColor': colors['background'],
+            },
+
     ),
     style={
         'textAlign': 'left',
@@ -1249,7 +1328,9 @@ app.layout = html.Div(
     },
 )
 
-
+@app.callback(Output('comparison', 'figure'),[Input('graph-comparison', 'value')])
+def comparison(graph_comp):
+    return display_sars_ebola_covid()
 
 @app.callback(
     Output('global-graph', 'figure'),
@@ -1285,20 +1366,20 @@ def map_selection(data, selected_rows,graph_line):
         fig2 = draw_singleCountry_Bar(df_confirmed_t,df_deaths_t,df_recovered_t,selected_rows[0],graph_line)
         zoom=4
         return gen_map(aux,zoom,temp_df['Lat'].iloc[0],temp_df['Long'].iloc[0]), fig1,fig2
-
-# hide/show modal
-@app.callback(Output('modal', 'style'),
-              [Input('info-button', 'n_clicks')])
-def show_modal(n):
-    if n > 0:
-        return {"display": "block"}
-    return {"display": "none"}
-
-# Close modal by resetting info_button click to 0
-@app.callback(Output('info-button', 'n_clicks'),
-              [Input('modal-close-button', 'n_clicks')])
-def close_modal(n):
-    return 0
+#
+# # hide/show modal
+# @app.callback(Output('modal', 'style'),
+#               [Input('info-button', 'n_clicks')])
+# def show_modal(n):
+#     if n > 0:
+#         return {"display": "block"}
+#     return {"display": "none"}
+#
+# # Close modal by resetting info_button click to 0
+# @app.callback(Output('info-button', 'n_clicks'),
+#               [Input('modal-close-button', 'n_clicks')])
+# def close_modal(n):
+#     return 0
 
 if __name__ == '__main__':
     app.run_server(debug=True)
