@@ -2,8 +2,8 @@ import pandas as pd
 import numpy as np
 
 # visualization
-import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
+# import matplotlib.pyplot as plt
+# import matplotlib.dates as mdates
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -361,7 +361,7 @@ mers_weekly['Date'] = pd.to_datetime(mers_weekly['Week'].astype(str) +
 def sars_ebola_first():
     temp = pd.concat([s_dbd, e_dbd, c_dbd], axis=0, sort=True)
 
-    fig = px.line(temp, x="nth_day", y="Cases", color='epidemic', range_x=[0, 100], height=600, width=700,
+    fig = px.line(temp, x="nth_day", y="Cases", color='epidemic', range_x=[0, 100], height=600, width=500,
                   title='Cases', color_discrete_sequence=px.colors.qualitative.Light24)
     fig.update_layout(
         title='Cases',
@@ -401,7 +401,7 @@ def sars_ebola_first():
 
 def ebola_sars_second():
     temp = pd.concat([s_dbd, e_dbd, c_dbd], axis=0, sort=True)
-    fig = px.line(temp, x="nth_day", y="Deaths", color='epidemic', range_x=[0, 100], height=600, width=700,
+    fig = px.line(temp, x="nth_day", y="Deaths", color='epidemic', range_x=[0, 100], height=600, width=500,
                   title='Deaths', color_discrete_sequence=px.colors.qualitative.Light24)
     fig.update_layout(
         title='Deaths',
@@ -442,7 +442,7 @@ def ebola_sars_second():
 def ebola_sars_third():
     temp = pd.concat([s_dbd, e_dbd, c_dbd], axis=0, sort=True)
 
-    fig = px.line(temp, x="nth_day", y="n_countries", color='epidemic', range_x=[0, 100], height=600, width=700,
+    fig = px.line(temp, x="nth_day", y="n_countries", color='epidemic', range_x=[0, 100], height=600, width=500,
                   title='No. of Countries', color_discrete_sequence=px.colors.qualitative.Light24)
     fig.update_layout(
         title='Number of Countries affected',
@@ -479,6 +479,141 @@ def ebola_sars_third():
 
     fig.update_yaxes(zeroline=True, zerolinewidth=2, zerolinecolor='#3A3A3A')
     return fig
+
+
+#############################################################################
+# economic impact
+#############################################################################
+
+import pandas as pd
+import numpy as np
+from IPython.display import display, HTML
+import matplotlib.pyplot as plt
+plt.rcParams['figure.figsize'] = [14, 6]
+import matplotlib.ticker as ticker
+# import seaborn as sns
+import glob
+import re
+import matplotlib.ticker as mtick
+
+# load data
+economic_impact_df = pd.read_csv("https://raw.githubusercontent.com/chinmay-bhat/DS_Covid/master/market_drop_analysis-master/yahoo_change_data_3mon.csv")
+economic_impact_df["Change%"] = economic_impact_df['Change%'].str.replace('%', '').astype('float')
+
+def price_change_over_time():
+    # plt.style.use('seaborn-darkgrid')
+    # fig, ax = plt.subplots()
+    # ax.plot(economic_impact_df["Date"], economic_impact_df["Close"])
+    # plt.xticks(rotation=30)
+    # ax.set_xticks(ax.get_xticks()[::4])
+    # plt.title("S&P 500 Change in Price over time", loc='left', fontsize=12, fontweight=0, color='black')
+    # plt.xlabel("Date", fontsize=12)
+    # plt.ylabel("Value of S&P 500", fontsize=12)
+
+    fig = px.line(economic_impact_df, x="Date", y="Close", height=600, width=700,
+                  title='S&P 500 Change in Price over time', color_discrete_sequence=px.colors.qualitative.Light24)
+    fig.update_layout(
+        title='Economic Impact',
+        hovermode='x',
+        font=dict(
+            family="Courier New, monospace",
+            size=14,
+            color=colors['figure_text'],
+        ),
+        legend=dict(
+            x=0.02,
+            y=1,
+            traceorder="normal",
+            font=dict(
+                family="sans-serif",
+                size=12,
+                color=colors['figure_text']
+            ),
+            bgcolor=colors['background'],
+            borderwidth=5
+        ),
+        paper_bgcolor=colors['background'],
+        plot_bgcolor=colors['background'],
+        margin=dict(l=0,
+                    r=0,
+                    t=0,
+                    b=0
+                    ),
+        height=300,
+
+    )
+    fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='#3A3A3A')
+    fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='#3A3A3A')
+
+    fig.update_yaxes(zeroline=True, zerolinewidth=2, zerolinecolor='#3A3A3A')
+    return fig
+
+def price_two():
+    fig = px.line(economic_impact_df, x="Date", y="Close", height=600, width=700,
+                  title='S&P 500 Change in Price over time', color_discrete_sequence=px.colors.qualitative.Light24)
+
+    fig.add_scatter(x=economic_impact_df["Date"], y=economic_impact_df["Volume"],
+                             mode='lines+markers',
+                             name='Volume',
+                             line=dict(color='#33FF51', width=2))
+    fig.update_layout(
+        title='Economic Impact',
+        hovermode='x',
+        font=dict(
+            family="Courier New, monospace",
+            size=14,
+            color=colors['figure_text'],
+        ),
+        legend=dict(
+            x=0.02,
+            y=1,
+            traceorder="normal",
+            font=dict(
+                family="sans-serif",
+                size=12,
+                color=colors['figure_text']
+            ),
+            bgcolor=colors['background'],
+            borderwidth=5
+        ),
+        paper_bgcolor=colors['background'],
+        plot_bgcolor=colors['background'],
+        margin=dict(l=0,
+                    r=0,
+                    t=0,
+                    b=0
+                    ),
+        height=300,
+
+    )
+    fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='#3A3A3A')
+    fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='#3A3A3A')
+
+    fig.update_yaxes(zeroline=True, zerolinewidth=2, zerolinecolor='#3A3A3A')
+    return fig
+
+
+    # # Graph 1
+    # fig, ax1 = plt.subplots(figsize=(14, 6))
+    # ax1.plot(df["Date"], df["Close"])
+    #
+    # # Graph 2
+    #
+    # ax2 = ax1.twinx()
+    # ax2.grid(False)
+    # ax2.bar(df["Date"], df["Volume"], alpha=0.2)
+    # ax2.get_xaxis().set_visible(False)
+    #
+    # # Plot settings
+    # plt.setp(ax1.xaxis.get_majorticklabels(), rotation=30)
+    # ax2.set_xticks(ax2.get_xticks()[::4])
+    # plt.title("S&P 500 Change in Price over time", loc='left', fontsize=12, fontweight=0, color='black')
+    # ax1.set_xlabel("Date", fontsize=12)
+    # ax1.set_ylabel("Value of S&P 500", fontsize=12)
+    # ax2.set_ylabel("Daily Volume", fontsize=12)
+    # ax2.yaxis.set_major_formatter(ticker.FuncFormatter(lambda x, p: str(x)[:1] + " Billion"))
+    #
+    # plt.show()
 
 #############################################################################
 # mapbox_access_token keys, not all mapbox function require token to function.
@@ -889,7 +1024,7 @@ app.layout = html.Div(
         # Header display
         html.Div(
             [
-                html.H1(children='COVID19 Outbreak Tracker',
+                html.H1(children='Epidemic Outbreak Tracker',
                         style={
                             'textAlign': 'left',
                             'color': colors['text'],
@@ -1362,7 +1497,7 @@ app.layout = html.Div(
             ],className="six columns")
         ],className="row"
         ),
-#Comparison one
+        #Comparison one
         html.Div(
             [
                 dcc.RadioItems(id='graph-comparison',options=[{'label': i, 'value': i}
@@ -1374,39 +1509,40 @@ app.layout = html.Div(
                  },
 
             )
-            ], className="six columns"
+            ], className="row"
         ),
         html.Div(
             [
                 dcc.Graph(id='comparison',
                           )
-            ], className="six columns",
-            style={
-                'textAlign': 'left',
-                'color': colors['text'],
-                'backgroundColor': colors['background']},
+            ], className="row",
         ),
         html.Div(
             [
                 dcc.Graph(id='comparison-second',
                           )
-            ], className="six columns",
-            style={
-                'textAlign': 'left',
-                'color': colors['text'],
-                'backgroundColor': colors['background']},
+            ], className="row",
         ),
         html.Div(
             [
                 dcc.Graph(id='comparison-third',
                           )
-            ], className="six columns",
-            style={
-                'textAlign': 'left',
-                'color': colors['text'],
-                'backgroundColor': colors['background']},
+            ], className="row",
         ),
-    ],className='row'
+        #Economic impact
+        html.Div(
+            [
+                dcc.Graph(id='economic-one',
+                          )
+            ], className="row",
+        ),
+        html.Div(
+            [
+                dcc.Graph(id='economic-two',
+                          )
+            ], className="row",
+        ),
+    ],
     ),
     style={
         'textAlign': 'left',
@@ -1428,6 +1564,13 @@ def comparison(graph_comp):
 def comparison(graph_comp):
     return ebola_sars_third()
 
+@app.callback(Output('economic-one', 'figure'),[Input('graph-comparison', 'value')])
+def economic(graph_comp):
+    return price_change_over_time()
+
+@app.callback(Output('economic-two', 'figure'),[Input('graph-comparison', 'value')])
+def economic(graph_comp):
+    return price_two()
 
 @app.callback(
     Output('global-graph', 'figure'),
