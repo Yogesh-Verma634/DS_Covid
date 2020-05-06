@@ -510,7 +510,7 @@ def price_change_over_time():
     # plt.xlabel("Date", fontsize=12)
     # plt.ylabel("Value of S&P 500", fontsize=12)
 
-    fig = px.line(economic_impact_df, x="Date", y="Close", height=600, width=700,
+    fig = px.line(economic_impact_df, x="Date", y="Close", height=600, width=400,
                   title='S&P 500 Change in Price over time', color_discrete_sequence=px.colors.qualitative.Light24)
     fig.update_layout(
         title='Economic Impact',
@@ -549,7 +549,7 @@ def price_change_over_time():
     return fig
 
 def price_two():
-    fig = px.line(economic_impact_df, x="Date", y="Close", height=600, width=700,
+    fig = px.line(economic_impact_df, x="Date", y="Close", height=600, width=400,
                   title='S&P 500 Change in Price over time', color_discrete_sequence=px.colors.qualitative.Light24)
 
     fig.add_scatter(x=economic_impact_df["Date"], y=economic_impact_df["Volume"],
@@ -1497,51 +1497,66 @@ app.layout = html.Div(
             ],className="six columns")
         ],className="row"
         ),
-        #Comparison one
-        html.Div(
-            [
-                dcc.RadioItems(id='graph-comparison',options=[{'label': i, 'value': i}
-                         for i in ['Comparison']],
-                value='Confirmed Cases',
-                labelStyle={'display': 'inline-block'},
-                style={
-                    'fontSize': 20,
-                 },
+        html.Div([
 
+            # Comparison one
+            html.P([html.H4('Comparison between SARS, MERS, COVID: ',
+                            )], className="row"),
+            html.Div(
+                [
+                    dcc.RadioItems(id='graph-comparison', options=[{'label': i, 'value': i}
+                                                                   for i in ['Comparison']],
+                                   value='Confirmed Cases',
+                                   labelStyle={'display': 'inline-block'},
+                                   style={
+                                       'fontSize': 20,
+                                   },
+
+                                   )
+                ], className="row"
+            ),
+            html.Div(
+                [
+                    dcc.Graph(id='comparison',
+                              )
+                ], className="five columns",
+            ),
+            html.Div(
+                [
+                    dcc.Graph(id='comparison-second',
+                              )
+                ], className="five columns",
+            ),
+            html.Div(
+                [
+                    dcc.Graph(id='comparison-third',
+                              )
+                ], className="four columns",
             )
+
+        ], className="row")
+
+        ,
+        html.Div(
+            [
+                # Economic impact
+                html.P([html.H4('Economic Impact: ',
+                                )], className="row"),
+                html.Div(
+                    [
+                        dcc.Graph(id='economic-one',
+                                  )
+                    ], className="five columns",
+                ),
+                html.Div(
+                    [
+                        dcc.Graph(id='economic-two',
+                                  )
+                    ], className="five columns",
+                ),
             ], className="row"
-        ),
-        html.Div(
-            [
-                dcc.Graph(id='comparison',
-                          )
-            ], className="row",
-        ),
-        html.Div(
-            [
-                dcc.Graph(id='comparison-second',
-                          )
-            ], className="row",
-        ),
-        html.Div(
-            [
-                dcc.Graph(id='comparison-third',
-                          )
-            ], className="row",
-        ),
-        #Economic impact
-        html.Div(
-            [
-                dcc.Graph(id='economic-one',
-                          )
-            ], className="row",
-        ),
-        html.Div(
-            [
-                dcc.Graph(id='economic-two',
-                          )
-            ], className="row",
-        ),
+        )
+
     ],
     ),
     style={
