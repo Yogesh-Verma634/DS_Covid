@@ -256,7 +256,7 @@ c_dbd['epidemic'] = 'COVID-19'
 # ------
 
 # ebola dataset
-ebola_14 = pd.read_csv("https://raw.githubusercontent.com/chinmay-bhat/DS_Covid/master/DS_Project/ebola-outbreak-20142016-complete-dataset/ebola_2014_2016_clean.csv", parse_dates=['Date'])
+ebola_14 = pd.read_csv("https://raw.githubusercontent.com/Yogesh-Verma634/DS_Covid/master/DS_Project/ebola-outbreak-20142016-complete-dataset/ebola_2014_2016_clean.csv", parse_dates=['Date'])
 
 # ebola_14 = ebola_14[ebola_14['Date']!=max(ebola_14['Date'])]
 
@@ -307,7 +307,7 @@ e_dbd['epidemic'] = 'EBOLA'
 # ----
 
 # sars dataset
-sars_03 = pd.read_csv("https://raw.githubusercontent.com/chinmay-bhat/DS_Covid/master/DS_Project/sars_2003_complete_dataset_clean.csv", parse_dates=['Date'])
+sars_03 = pd.read_csv("https://raw.githubusercontent.com/Yogesh-Verma634/DS_Covid/master/DS_Project/sars_2003_complete_dataset_clean.csv", parse_dates=['Date'])
 
 # selecting important columns only
 sars_03 = sars_03[['Date', 'Country', 'Cumulative number of case(s)',
@@ -345,8 +345,8 @@ s_dbd['new_deaths'] = s_dbd['Deaths'].diff()
 s_dbd['epidemic'] = 'SARS'
 
 # MERS
-mers_cntry = pd.read_csv("https://raw.githubusercontent.com/chinmay-bhat/DS_Covid/master/DS_Project/mers-outbreak-dataset-20122019/country_count_latest.csv")
-mers_weekly = pd.read_csv("https://raw.githubusercontent.com/chinmay-bhat/DS_Covid/master/DS_Project/mers-outbreak-dataset-20122019/weekly_clean.csv")
+mers_cntry = pd.read_csv("https://raw.githubusercontent.com/Yogesh-Verma634/DS_Covid/master/DS_Project/mers-outbreak-dataset-20122019/country_count_latest.csv")
+mers_weekly = pd.read_csv("https://raw.githubusercontent.com/Yogesh-Verma634/DS_Covid/master/DS_Project/mers-outbreak-dataset-20122019/weekly_clean.csv")
 
 # cleaning
 mers_weekly['Year-Week'] = mers_weekly['Year'].astype(str) + ' - ' + mers_weekly['Week'].astype(str)
@@ -497,7 +497,7 @@ import re
 import matplotlib.ticker as mtick
 
 # load data
-economic_impact_df = pd.read_csv("https://raw.githubusercontent.com/chinmay-bhat/DS_Covid/master/market_drop_analysis-master/yahoo_change_data_3mon.csv")
+economic_impact_df = pd.read_csv("https://raw.githubusercontent.com/Yogesh-Verma634/DS_Covid/master/market_drop_analysis-master/yahoo_change_data_3mon.csv")
 economic_impact_df["Change%"] = economic_impact_df['Change%'].str.replace('%', '').astype('float')
 
 def price_change_over_time():
