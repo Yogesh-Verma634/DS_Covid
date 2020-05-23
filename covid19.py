@@ -214,7 +214,7 @@ map_data = map_data.sort_values("new").drop('new', axis=1)
 # --------
 
 # covid_19 dataset
-covid_19 = pd.read_csv('https://raw.githubusercontent.com/chinmay-bhat/DS_Covid/master/DS_Project/corona-virus-report/covid_19_clean_complete.csv', parse_dates=['Date'])
+covid_19 = pd.read_csv('https://raw.githubusercontent.com/Yogesh-Verma634/DS_Covid/master/DS_Project/corona-virus-report/covid_19_clean_complete.csv', parse_dates=['Date'])
 
 # selecting important columns only
 covid_19 = covid_19[['Date', 'Country/Region', 'Confirmed', 'Deaths', 'Recovered']]
